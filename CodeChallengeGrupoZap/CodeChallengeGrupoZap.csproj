@@ -10,4 +10,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CodeChallengeGrupoZap.Domain\CodeChallengeGrupoZap.Domain.csproj" />
+    <ProjectReference Include="..\CodeChallengeGrupoZap.Service\CodeChallengeGrupoZap.Service.csproj" />
+    <ProjectReference Include="..\CodeChallengeGrupoZap.Repository\CodeChallengeGrupoZap.Repository.csproj" />
+  </ItemGroup>
+
 </Project>

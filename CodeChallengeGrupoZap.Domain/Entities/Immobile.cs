@@ -13,7 +13,7 @@ namespace CodeChallengeGrupoZap.Domain.Entities
         public int ParkingSpaces { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool Owner { get; set; }
-        public IList<string> Images { get; set; }
+        public IEnumerable<string> Images { get; set; }
         public Address Address { get; set; }
         public int Bathrooms { get; set; }
         public int Bedrooms { get; set; }

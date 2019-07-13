@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\CodeChallengeGrupoZap.Domain\CodeChallengeGrupoZap.Domain.csproj" />
+    <ProjectReference Include="..\CodeChallengeGrupoZap.Repository\CodeChallengeGrupoZap.Repository.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
