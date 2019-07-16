@@ -11,7 +11,7 @@ namespace CodeChallengeGrupoZap.Repository
     public class ImmobileRepository : IImmobileRepository
     {
         private readonly IConfiguration _config;
-        public IEnumerable<Immobile> Properties { get; set; }
+        public IList<Immobile> Properties { get; set; }
 
         public ImmobileRepository(IConfiguration config)
         {
@@ -19,11 +19,11 @@ namespace CodeChallengeGrupoZap.Repository
             Properties = LoadProperties();
         }
 
-        private IEnumerable<Immobile> LoadProperties()
+        private IList<Immobile> LoadProperties()
         {
             string json = LoadJson();
 
-            return JsonConvert.DeserializeObject<IEnumerable<Immobile>>(json);
+            return JsonConvert.DeserializeObject<IList<Immobile>>(json);
         }
 
         private string LoadJson()

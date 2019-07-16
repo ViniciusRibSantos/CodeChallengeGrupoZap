@@ -29,7 +29,7 @@ namespace CodeChallengeGrupoZap
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IImmobileService, ImmobileService>();
-            services.AddScoped<IImmobileRepository, ImmobileRepository>();
+            services.AddSingleton<IImmobileRepository, ImmobileRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

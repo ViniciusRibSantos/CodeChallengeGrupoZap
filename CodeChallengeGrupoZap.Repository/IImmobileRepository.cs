@@ -5,6 +5,6 @@ namespace CodeChallengeGrupoZap.Repository
 {
     public interface IImmobileRepository
     {
-        IEnumerable<Immobile> Properties { get; set; }
+        IList<Immobile> Properties { get; set; }
     }
 }
