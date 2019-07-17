@@ -19,7 +19,7 @@ namespace CodeChallengeGrupoZap.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Immobile>> Get()
         {
-            _immobileService.FilterByZap();
+            IEnumerable<Immobile> zap = _immobileService.FilterByZap();
             
             return null;
         }
