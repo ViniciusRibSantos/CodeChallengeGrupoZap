@@ -31,22 +31,16 @@ namespace CodeChallengeGrupoZap.Repository
             string json = "";
             string url = _config.GetSection("Urls:Source-2.json").Value;
 
-            try
-            {
-                WebRequest request = WebRequest.Create(url);  
-                WebResponse response = request.GetResponse();
+            WebRequest request = WebRequest.Create(url);  
+            WebResponse response = request.GetResponse();
 
-                Stream stream = response.GetResponseStream();
-                StreamReader readStream = new StreamReader (stream, Encoding.UTF8);
+            Stream stream = response.GetResponseStream();
+            StreamReader readStream = new StreamReader (stream, Encoding.UTF8);
 
-                json = readStream.ReadToEnd();
+            json = readStream.ReadToEnd();
 
-                response.Close ();
-                readStream.Close ();
-            }
-            catch
-            {
-            }
+            response.Close ();
+            readStream.Close ();
 
             return json;
         }

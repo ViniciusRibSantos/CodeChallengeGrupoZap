@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using CodeChallengeGrupoZap.Domain.Entities;
 using CodeChallengeGrupoZap.Repository;
 
@@ -18,42 +17,62 @@ namespace CodeChallengeGrupoZap.Service
         private Func<Immobile, bool> _minimumValueMinusTenPercent = (Immobile i) => { return  i.UsableAreas <= 3150; };
         private Func<Immobile, bool> _minimumRentalPriceZap = (Immobile i) => { return  i.PricingInfos.RentalTotalPrice >= 3500; };
         private Func<Immobile, bool> _minimumSalePriceZap = (Immobile i) => { return  i.PricingInfos.Price >= 600000; };
-
+        private Func<Immobile, bool> _monthlyFeeCondominiumIsValid = (Immobile i) => { return  i.PricingInfos.MonthlyCondoFee is int; };
+        private Func<Immobile, bool> _condoThirtyLessthanRent = (Immobile i) => { return  i.PricingInfos.MonthlyCondoFee < i.PricingInfos.RentalTotalPrice * 0.3; };
+        private Func<Immobile, bool> _condoThirtyLessthanRentPlusFifty = (Immobile i) => { return  i.PricingInfos.MonthlyCondoFee < (i.PricingInfos.RentalTotalPrice * 0.3) * 1.5; };
+        private Func<Immobile, bool> _maximumRentalPriceVivareal = (Immobile i) => { return  i.PricingInfos.RentalTotalPrice <= 4000; };
+        private Func<Immobile, bool> _maximumSalePriceVivareal = (Immobile i) => { return  i.PricingInfos.Price <= 700000; };
+        
         public ImmobileService(IImmobileRepository immobileRepository)
         {
             _immobileRepository = immobileRepository;
         }
 
-        public IEnumerable<Immobile> FilterByZap()
+        public IList<Immobile> FilterByZap()
         {
-            INode minimumRentalPriceZap = new Node(_minimumRentalPriceZap, null);
-            INode minimumValue = new Node(_minimumValue, minimumRentalPriceZap);
-            INode minimumValueMinusTenPercent = new Node(_minimumValueMinusTenPercent, minimumRentalPriceZap);
+            INode leaf = new Node(_true, null);
+            INode minimumRentalPriceZap = new Node(_minimumRentalPriceZap, leaf);
+            INode minimumSalePriceZap = new Node(_minimumSalePriceZap, leaf);
+            INode minimumValue = new Node(_minimumValue, minimumSalePriceZap);
+            INode minimumValueMinusTenPercent = new Node(_minimumValueMinusTenPercent, minimumSalePriceZap);
             INode isBoundingBoxGrupoZap = new DoubleNode(_isBoundingBoxGrupoZap, minimumValueMinusTenPercent, minimumValue);
             INode usableAreasGreaterThanZero = new Node(_usableAreasGreaterThanZero, isBoundingBoxGrupoZap);
-            INode minimumSalePriceZap = new Node(_minimumSalePriceZap, null);
-            INode saleOrRental = new DoubleNode(_saleOrRental, minimumSalePriceZap, usableAreasGreaterThanZero);
+            INode saleOrRental = new DoubleNode(_saleOrRental, usableAreasGreaterThanZero, minimumRentalPriceZap);
             INode latAndLonAreZero = new Node(_latAndLonAreZero, saleOrRental);
-            INode head = new Node(_true, latAndLonAreZero);
-            
+            INode root = new Node(_true, latAndLonAreZero);
+
             IList<Immobile> properties = _immobileRepository.Properties;
-            IList<Immobile> filteredProperties = PerformFilter(properties, head);
+            IList<Immobile> filteredProperties = PerformFilter(properties, root);
 
             return filteredProperties;
         }
 
-        public IEnumerable<Immobile> FilterByVivareal()
+        public IList<Immobile> FilterByVivareal()
         {
-            return null;
+            INode leaf = new Node(_true, null);
+            INode maximumRentalPriceVivareal = new Node(_maximumRentalPriceVivareal, leaf);
+            INode condoThirtyLessthanRent = new Node(_condoThirtyLessthanRent, maximumRentalPriceVivareal);
+            INode condoThirtyLessthanRentPlusFifty = new Node(_condoThirtyLessthanRentPlusFifty, maximumRentalPriceVivareal);
+            INode isBoundingBoxGrupoZap = new DoubleNode(_isBoundingBoxGrupoZap, condoThirtyLessthanRentPlusFifty, condoThirtyLessthanRent);
+            INode monthlyFeeCondominiumIsValid = new Node(_monthlyFeeCondominiumIsValid, isBoundingBoxGrupoZap);
+            INode maximumSalePriceVivareal = new Node(_maximumSalePriceVivareal, leaf);
+            INode saleOrRental = new DoubleNode(_saleOrRental, maximumSalePriceVivareal, monthlyFeeCondominiumIsValid);
+            INode latAndLonAreZero = new Node(_latAndLonAreZero, saleOrRental);
+            INode root = new Node(_true, latAndLonAreZero);
+
+            IList<Immobile> properties = _immobileRepository.Properties;
+            IList<Immobile> filteredProperties = PerformFilter(properties, root);
+
+            return filteredProperties;
         }
 
-        private IList<Immobile> PerformFilter(IList<Immobile> propperties, INode head)
+        private IList<Immobile> PerformFilter(IList<Immobile> propperties, INode root)
         {
             IList<Immobile> filteredProperties = new List<Immobile>();
 
             foreach (Immobile immobile in propperties)
             {
-                if(head.Filter(immobile))
+                if(root.Filter(immobile))
                     filteredProperties.Add(immobile);
             }
 

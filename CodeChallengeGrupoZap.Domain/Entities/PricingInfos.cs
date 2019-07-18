@@ -7,6 +7,6 @@ namespace CodeChallengeGrupoZap.Domain.Entities
         public double Price { get; set; }
         public double RentalTotalPrice { get; set; }
         public string BusinessType { get; set; }
-        public string MonthlyCondoFee { get; set; }
+        public int MonthlyCondoFee { get; set; }
     }
 }

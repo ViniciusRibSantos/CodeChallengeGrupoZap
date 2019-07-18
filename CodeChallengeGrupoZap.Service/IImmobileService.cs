@@ -5,6 +5,7 @@ namespace CodeChallengeGrupoZap.Service
 {
     public interface IImmobileService
     {
-        IEnumerable<Immobile> FilterByZap();
+        IList<Immobile> FilterByZap();
+        IList<Immobile> FilterByVivareal();
     }
 }
