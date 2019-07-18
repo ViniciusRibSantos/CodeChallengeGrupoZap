@@ -10,17 +10,19 @@ namespace CodeChallengeGrupoZap.Controllers
     public class ImmobileController : Controller
     {
         private readonly IImmobileService _immobileService;
+        private int DefaultPageSize { get; set; }
 
         public ImmobileController(IImmobileService immobileService)
         {
             _immobileService = immobileService;
+            DefaultPageSize = 20;
         }
 
         [Route("[action]")]
         [HttpGet]
         public JsonResult FilterByZap()
         {
-            Response response = MountResponse(_immobileService.FilterByZap());
+            Response response = MountResponse(_immobileService.FilterByZap(), DefaultPageSize);
 
             return Json(response);
         }
@@ -29,21 +31,29 @@ namespace CodeChallengeGrupoZap.Controllers
         [HttpGet]
         public JsonResult FilterByVivareal()
         {
-            Response response = MountResponse(_immobileService.FilterByVivareal());
+            Response response = MountResponse(_immobileService.FilterByVivareal(), DefaultPageSize);
 
             return Json(response);
         }
 
-        public Response MountResponse(IList<Immobile> properties)
+        public Response MountResponse(IList<Immobile> properties, int pageSize)
         {
             Response response = new Response();
 
-            response.PageSize = 20;
-            response.PageNumber = properties.Count % response.PageSize == 0 ? properties.Count / response.PageSize : (properties.Count / response.PageSize) + 1;
+            response.PageSize = pageSize;
+            response.PageNumber = GeneratePageNumber(pageSize, properties.Count);
             response.TotalCount = properties.Count;
             response.Listings = properties;
 
             return response;
+        }
+
+        public int GeneratePageNumber(int pageSize,  int totalCount)
+        {
+            if(pageSize % totalCount == 0)
+                return totalCount / pageSize;
+            else
+                return (totalCount / pageSize) + 1;
         }
     }
 }

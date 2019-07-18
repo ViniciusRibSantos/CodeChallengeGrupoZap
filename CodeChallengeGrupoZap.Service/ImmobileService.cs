@@ -9,12 +9,12 @@ namespace CodeChallengeGrupoZap.Service
     {
         private readonly IImmobileRepository _immobileRepository;
         private Func<Immobile, bool> _true = (Immobile i) => { return true; };
-        private Func<Immobile, bool> _latAndLonAreZero = (Immobile i) => { return i.Address.GeoLocation.Location.Lat == 0 && i.Address.GeoLocation.Location.Lon == 0; };
+        private Func<Immobile, bool> _latAndLonDifferentZero = (Immobile i) => { return i.Address.GeoLocation.Location.Lat != 0 && i.Address.GeoLocation.Location.Lon != 0; };
         private Func<Immobile, bool> _usableAreasGreaterThanZero = (Immobile i) => { return i.UsableAreas > 0; };
         private Func<Immobile, bool> _saleOrRental = (Immobile i) => { return i.PricingInfos.BusinessType == "SALE"; };
         private Func<Immobile, bool> _isBoundingBoxGrupoZap = (Immobile i) => { return isBoundingBoxGrupoZap(i.Address.GeoLocation.Location); };
-        private Func<Immobile, bool> _minimumValue = (Immobile i) => { return  i.UsableAreas <= 3500; };
-        private Func<Immobile, bool> _minimumValueMinusTenPercent = (Immobile i) => { return  i.UsableAreas <= 3150; };
+        private Func<Immobile, bool> _minimumValue = (Immobile i) => { return  i.UsableAreas > 3500; };
+        private Func<Immobile, bool> _minimumValueMinusTenPercent = (Immobile i) => { return  i.UsableAreas > 3150; };
         private Func<Immobile, bool> _minimumRentalPriceZap = (Immobile i) => { return  i.PricingInfos.RentalTotalPrice >= 3500; };
         private Func<Immobile, bool> _minimumSalePriceZap = (Immobile i) => { return  i.PricingInfos.Price >= 600000; };
         private Func<Immobile, bool> _monthlyFeeCondominiumIsValid = (Immobile i) => { return  i.PricingInfos.MonthlyCondoFee is int; };
@@ -38,8 +38,8 @@ namespace CodeChallengeGrupoZap.Service
             INode isBoundingBoxGrupoZap = new DoubleNode(_isBoundingBoxGrupoZap, minimumValueMinusTenPercent, minimumValue);
             INode usableAreasGreaterThanZero = new Node(_usableAreasGreaterThanZero, isBoundingBoxGrupoZap);
             INode saleOrRental = new DoubleNode(_saleOrRental, usableAreasGreaterThanZero, minimumRentalPriceZap);
-            INode latAndLonAreZero = new Node(_latAndLonAreZero, saleOrRental);
-            INode root = new Node(_true, latAndLonAreZero);
+            INode latAndLonDifferentZero = new Node(_latAndLonDifferentZero, saleOrRental);
+            INode root = new Node(_true, latAndLonDifferentZero);
 
             IList<Immobile> properties = _immobileRepository.Properties;
             IList<Immobile> filteredProperties = PerformFilter(properties, root);
@@ -57,8 +57,8 @@ namespace CodeChallengeGrupoZap.Service
             INode monthlyFeeCondominiumIsValid = new Node(_monthlyFeeCondominiumIsValid, isBoundingBoxGrupoZap);
             INode maximumSalePriceVivareal = new Node(_maximumSalePriceVivareal, leaf);
             INode saleOrRental = new DoubleNode(_saleOrRental, maximumSalePriceVivareal, monthlyFeeCondominiumIsValid);
-            INode latAndLonAreZero = new Node(_latAndLonAreZero, saleOrRental);
-            INode root = new Node(_true, latAndLonAreZero);
+            INode latAndLonDifferentZero = new Node(_latAndLonDifferentZero, saleOrRental);
+            INode root = new Node(_true, latAndLonDifferentZero);
 
             IList<Immobile> properties = _immobileRepository.Properties;
             IList<Immobile> filteredProperties = PerformFilter(properties, root);
