@@ -7,7 +7,7 @@ namespace CodeChallengeGrupoZap.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ImmobileController : ControllerBase
+    public class ImmobileController : Controller
     {
         private readonly IImmobileService _immobileService;
 
@@ -16,12 +16,34 @@ namespace CodeChallengeGrupoZap.Controllers
             _immobileService = immobileService;
         }
 
+        [Route("[action]")]
         [HttpGet]
-        public ActionResult<IEnumerable<Immobile>> Get()
+        public JsonResult FilterByZap()
         {
-            IEnumerable<Immobile> zap = _immobileService.FilterByZap();
-            
-            return null;
+            Response response = MountResponse(_immobileService.FilterByZap());
+
+            return Json(response);
+        }
+        
+        [Route("[action]")]
+        [HttpGet]
+        public JsonResult FilterByVivareal()
+        {
+            Response response = MountResponse(_immobileService.FilterByVivareal());
+
+            return Json(response);
+        }
+
+        public Response MountResponse(IList<Immobile> properties)
+        {
+            Response response = new Response();
+
+            response.PageSize = 20;
+            response.PageNumber = properties.Count % response.PageSize == 0 ? properties.Count / response.PageSize : (properties.Count / response.PageSize) + 1;
+            response.TotalCount = properties.Count;
+            response.Listings = properties;
+
+            return response;
         }
     }
 }
