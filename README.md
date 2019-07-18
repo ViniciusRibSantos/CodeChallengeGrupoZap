@@ -14,3 +14,8 @@ Esse projeto não possui testes automatizados.
 Como fazer o deploy?
 
 <a href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/?view=aspnetcore-2.2">Deploy ASP.NET Core</a>
+
+Routing
+
+Filtrar imoveis para o Zap: /Immobile/FilterByZap
+Filtrar imoveis para o Vivareal: /Immobile/FilterByVivareal
