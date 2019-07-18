@@ -1,21 +1,33 @@
 # Code Challenge Grupo Zap
+A linguagem usada foi o C# e o framework open source .NET Core
 
-*Como rodar localmente?
+## Como rodar localmente?
 
-**Passo 1 - Realizar a instalação do <a href="https://dotnet.microsoft.com/download">.NET Core</a>.
-**Passo 2 - Pelo terminal entre na pasta do projeto.
-**Passo 3 - Entre na pasta CodeChallengeGrupoZap (cd CodeChallengeGrupoZap).
-**Passo 4 - Execute o comando dotnet run.
+- Realizar a instalação do [.NET Core](https://dotnet.microsoft.com/download">).
 
-*Como rodar os testes?
+- Pelo terminal entre na pasta do projeto.
 
-**Esse projeto não possui testes automatizados.
+- Entre na pasta CodeChallengeGrupoZap
 
-*Como fazer o deploy?
+```bash
+cd CodeChallengeGrupoZap
+```
+- Rodar a aplicação
 
-**<a href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/?view=aspnetcore-2.2">Deploy ASP.NET Core</a>
+```bash
+dotnet run
+```
 
-*Routing
 
-**Filtrar imoveis para o Zap: /Immobile/FilterByZap
-**Filtrar imoveis para o Vivareal: /Immobile/FilterByVivareal
+## Como rodar os testes?
+
+- Esse projeto não possui testes automatizados.
+
+## Como fazer o deploy?
+
+- [Deploy ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/?view=aspnetcore-2.2")
+
+## Routing
+
+- Filtrar imoveis para o Zap: /Immobile/FilterByZap
+- Filtrar imoveis para o Vivareal: /Immobile/FilterByVivareal
